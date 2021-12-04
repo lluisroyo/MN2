@@ -107,7 +107,7 @@ int main(){
 	double err[N];
 	double err_1[N]; /* err_1 es l'error en unitats del SI */
 	for (i=0; i<N;i++){
-		err[i] = T[i][M-1] - teoric(i*dx,T_c,(M-1)*dt);
+		err[i] =fabs(T[i][M-1] - teoric(i*dx,T_c,(M-1)*dt));
 		err_1[i] = (err[i] * volt *volt *sigma)/(2.0 * kappa);
 		fprintf(output3, "%lf \t %lf \n",(float)i * dx * 2.0,err_1[i]);
 	}
