@@ -1,12 +1,18 @@
-set terminal gif animate delay 5
+set terminal gif animate delay 2
 set output "animacio.gif"
 
-do for [i=0:248]{
-unset key 
+do for [i=0:495]{
+
+t = i * 0.1437
+a = sprintf("t = %.2f s",t)
+
+set key
 
 set xrange[0:2]
-set yrange[36:57]
-set object 1 rectangle from 0.75,50 to 1.25,57
+set yrange[36:55]
+set xlabel "x [cm]"
+set ylabel "T [℃]" font "Symbola,10"
+set object 1 rectangle from 0.75,50 to 1.25,55
 set object 1 fillstyle pattern 1 fillcolor "red"
-plot "pas".i.".dat"
+plot "pas".i.".dat" title a
 }

@@ -33,7 +33,11 @@ int main(){
 	double sigma;
 	double volt;
 	double T_c;
-		
+	double t_50;
+	double T_50;
+
+	bool bandera_50 = true;
+
 	N = 100;
 	dx = 1.0/((float)N - 1);
 	gamma = 0.005;
@@ -44,6 +48,7 @@ int main(){
 	sigma = 0.472;
 	volt = 40.0;
 	T_c = (2.0 * kappa * 309.65) / (volt * volt * sigma);
+	T_50 = (2.0 * kappa * 323.15) / (volt * volt * sigma); 
 
 	if (t_a ==0){
 		M = (int)(t_a / dt) + 1;
@@ -59,6 +64,7 @@ int main(){
 
 	int i;
 	int j;
+    int j_opt;
 
 	for (i=0; i<N; i++){
 		T[i][0] = T_c;
@@ -110,6 +116,13 @@ int main(){
 			}
 		}
 		printf("%d \t %lf \n",count,max);
+		if(T[38][j]>T_50){
+			while(bandera_50){
+                j_opt = j-1;
+				t_50 = (j-1)*dt;
+				bandera_50 = false;
+			}
+		}
 
 	}
 
@@ -121,13 +134,14 @@ int main(){
 	double err1[N];
 
 	for(i=0; i<N; i++){
-		err[i] = T[i][M-1] - teoric(i*dx, T_c, (M-1)*dt);
+		err[i] =fabs(T[i][M-1] - teoric(i*dx, T_c, (M-1)*dt));
 		err1[i] = (err[i] * volt * volt *sigma) / (2.0 * kappa); /* error en unitats SI */
 		fprintf(output1, "%lf \t %lf \n",2.0*i*dx,err1[i]);
 	}
 
 	fclose(output1);
 
+	printf("El temps optim es %lf,%lf,%d \n",t_50,0.02*0.02 *t_50*49807075.0/7.0,j_opt);
 	return 0;
 }
 			
