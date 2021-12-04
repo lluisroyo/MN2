@@ -122,7 +122,7 @@ int main(){
 	double err1[N];
 
 	for(i=0; i<N; i++){
-		err[i] = T[i][M-1] - teoric(i*dx, T_c, (M-1)*dt);
+		err[i] =fabs(T[i][M-1] - teoric(i*dx, T_c, (M-1)*dt));
 		err1[i] = (err[i] * volt * volt *sigma) / (2.0 * kappa); /* error en unitats SI */
 		fprintf(output1, "%lf \t %lf \n",2.0*i*dx,err1[i]);
 	}
