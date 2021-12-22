@@ -167,7 +167,7 @@ int main(){
 
 		FILE *output;
 		char filename[100];
-		sprintf(filename,"/home/user/pasos/pas%d.dat",n);
+		sprintf(filename,"pas%d.dat",n);
 		output = fopen(filename,"w");
 		
 		for (i=0; i<N; i++){
