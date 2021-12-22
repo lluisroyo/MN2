@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define N 2 /*nº de planetas */
-#define h 0.01 /*step temporal*/
+#define N 7 /*nº de cuerpos */
+#define h 0.00023080853  /*discr tep temporal 1 dia*/
 
 double f(double x1,double x2,double y1,double y2,double z1,double z2, double m){
 	return  m * (x2 - x1) / pow(pow(x2-x1,2)+pow(y2-y1,2)+pow(z2-z1,2),1.5);
@@ -12,15 +12,15 @@ double f(double x1,double x2,double y1,double y2,double z1,double z2, double m){
 
 
 int main(){
-	double m[N] = {39.45,0.000118};
+	double m[N] = {39.45,0.0000065476249,0.000096543564,0.000118,0.0000127,0.0376494928,18.5415};
 
-	double x[N] = {0.0,0.192204};
-	double y[N] = {0.0,0.0,};
-	double z[N] = {0.0,0.0};
+	double x[N] = {0.0,0.07440225,0.139021245,0.192204,0.29355343,1.0,0.6};
+	double y[N] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	double z[N] = {0.0,0.0,0.0,0.0,0.0,0.0,-1.0};
 
-	double v_x[N] = {0.0,0.0};
-	double v_y[N] = {0.0,2*M_PI*x[1]/0.084303};
-	double v_z[N] = {0.0,0.0};
+	double v_x[N] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	double v_y[N] = {0.0,2*M_PI*x[1]/0.020300118,2*M_PI*x[2]/0.051863092,2*M_PI*x[3]/0.084303,2*M_PI*x[4]/0.1585651,2*M_PI*x[5],0.0};
+	double v_z[N] = {0.0,0.0,0.0,0.0,0.0,0.0,8.0};
 
 
 	double k1x[N],k2x[N],k3x[N],k4x[N],l1x[N],l2x[N],l3x[N],l4x[N];
@@ -35,7 +35,7 @@ int main(){
 
 	int i,j,n;
 
-	for(n=1; n<1000; n++){
+	for(n=1; n<10000; n++){
     		for(i=0; i<N; i++){
 
         		k1x[i] = v_x[i];
@@ -166,12 +166,12 @@ int main(){
     		}
 
 		FILE *output;
-		char filename[20];
-		sprintf(filename,"pas%d.dat",n);
+		char filename[100];
+		sprintf(filename,"/home/user/pasos/pas%d.dat",n);
 		output = fopen(filename,"w");
 		
 		for (i=0; i<N; i++){
-			fprintf(output, "%lf \t %lf  \n",x[i],y[i]);
+			fprintf(output, "%lf \t %lf \t %lf \n",x[i],y[i],z[i]);
 		}
 
 		fclose(output);
