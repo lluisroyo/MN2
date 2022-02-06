@@ -4,12 +4,16 @@ def f(x,y):
     f = (1.0 /(2.0* np.pi)) * np.exp(-(((x-0.25)**2 + (y-0.75)**2)/0.0002)) 
     return f
 
-def v(x,y):
-    velocitat = (x-1)**2 - y
+def v_x(x):
+    velocitat = (1-x)*100
+    return velocitat
+def v_y(y):
+    velocitat = -100*y
     return velocitat
 
+
 dl = 0.01
-r = 0.25
+r = 0.001
 dt = r * dl
 
 D = 1   #Coeficient de difusio
@@ -32,22 +36,23 @@ for i in range(0,101,1):
     for j in range(0,101,1):
         y = j*dl
         file.write("{} \t {} \t {} \n".format(x,y,rho_old[i][j]))
+file.close()
 
 # Comprovació volum inicial = 1 #
-volum = 0
+volum_inicial = 0
 
 for i in range(1,100,1):
     for j in range(1,100,1):
-        volum += rho_old[i][j]
-print("volum inicial: {}".format(volum))
+        volum_inicial += rho_old[i][j]
+print("volum inicial: {}".format(volum_inicial))
 
-for n in range(1,100,1):
+for n in range(1,1000,1):
     for i in range(1,100,1):
         x = i*dl
         for j in range(1,100,1):
             y = j*dl
 
-            rho_new[i][j] = rho_old[i][j] - (r / 2.0) * ( v(x+dl,j)*rho_old[i+1][j] + v(x,y+dl)*rho_old[i][j+1] - v(x-dl,y)*rho_old[i-1][j] - v(x,y-dl)*rho_old[i][j-1]  )   +  (r**2 / 2) * ( v(x+dl/2,y)*(v(x+dl,y)*rho_old[i+1][j] - v(x,y)*rho_old[i][j]) + v(x,y+dl/2)*(v(x,y+dl)*rho_old[i][j+1] - v(x,y)*rho_old[i][j]) - v(x-dl/2,y)*(v(x,y)*rho_old[i][j] - v(x-dl,y)*rho_old[i-1][j]) - v(x,y-dl/2)*(v(x,y)*rho_old[i][j] - v(x,y-dl)*rho_old[i][j-1]))  + D * (r**2/ dt) * (rho_old[i-1][j] + rho_old[i+1][j] + rho_old[i][j-1] + rho_old[i][j+1] - 4 * rho_old[i][j])
+            rho_new[i][j] = rho_old[i][j] - (r / 2.0) * ( v_x(x+dl)*rho_old[i+1][j] + v_y(y+dl)*rho_old[i][j+1] - v_x(x-dl)*rho_old[i-1][j] - v_y(y-dl)*rho_old[i][j-1]  )   +  (r**2 / 2) * ( v_x(x+dl/2)*(v_x(x+dl)*rho_old[i+1][j] - v_x(x)*rho_old[i][j]) + v_y(y+dl/2)*(v_y(y+dl)*rho_old[i][j+1] - v_y(y)*rho_old[i][j]) - v_x(x-dl/2)*(v_x(x)*rho_old[i][j] - v_x(x-dl)*rho_old[i-1][j]) - v_y(y-dl/2)*(v_y(y)*rho_old[i][j] - v_y(y-dl)*rho_old[i][j-1]))  + D * (r**2/ dt) * (rho_old[i-1][j] + rho_old[i+1][j] + rho_old[i][j-1] + rho_old[i][j+1] - 4 * rho_old[i][j])
         
     filename = "pas"+str(n)+".dat"
     
@@ -59,6 +64,14 @@ for n in range(1,100,1):
             y = j*dl
             file.write("{} \t {} \t {} \n".format(x,y,rho_new[i][j]))
             rho_old[i][j] = rho_new[i][j]
+    file.close()
 
+volum_final = 0
+for i in range(1,100,1):
+    for j in range(1,100,1):
+        volum_final += rho_old[i][j]
+print("volum final:{}".format(volum_final))
+error = np.abs(volum_final - volum_inicial)/volum_inicial *100
+print("error relatiu: {}%".format(error))
         
 

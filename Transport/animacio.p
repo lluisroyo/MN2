@@ -1,7 +1,7 @@
-set terminal gif animate delay 20
+set terminal gif animate delay 2
 set output "animacio.gif"
 
-do for [i=0:99]{
+do for [i=0:999]{
 
 unset key
 
