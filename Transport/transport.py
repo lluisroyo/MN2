@@ -5,10 +5,10 @@ def f(x,y):
     return f
 
 def v_x(x):
-    velocitat = (1-x)*100
+    velocitat = -100*(x-1) 
     return velocitat
 def v_y(y):
-    velocitat = -100*y
+    velocitat = - 100 * y
     return velocitat
 
 
@@ -46,6 +46,8 @@ for i in range(1,100,1):
         volum_inicial += rho_old[i][j]
 print("volum inicial: {}".format(volum_inicial))
 
+err_file = open("error.dat","w")
+
 for n in range(1,1000,1):
     for i in range(1,100,1):
         x = i*dl
@@ -57,6 +59,8 @@ for n in range(1,1000,1):
     filename = "pas"+str(n)+".dat"
     
     file = open(filename,"w")
+    
+    volum = 0
 
     for i in range(0,101,1):
         x = i*dl
@@ -64,7 +68,17 @@ for n in range(1,1000,1):
             y = j*dl
             file.write("{} \t {} \t {} \n".format(x,y,rho_new[i][j]))
             rho_old[i][j] = rho_new[i][j]
+            volum += rho_new[i][j]
     file.close()
+    
+    #Les següents línies de codi serveixen per poder fer una representació de l'error
+    err = np.abs(volum - volum_inicial) / volum_inicial *100 
+    err_file.write("{} \t {} \n".format(n,err))
+
+    print("{}/999".format(n))
+
+
+err_file.close()
 
 volum_final = 0
 for i in range(1,100,1):
